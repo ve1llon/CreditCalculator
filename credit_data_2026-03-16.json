@@ -1,0 +1,16 @@
+{
+  "lastName": "Васильев",
+  "firstName": "Никита",
+  "middleName": "Васильевич",
+  "birthDate": "1990-01-01",
+  "passport": "1234567890",
+  "phone": "+7(902)670-94-11",
+  "education": "high",
+  "income": "80000",
+  "bkiConsent": true,
+  "pdpConsent": true,
+  "loanAmount": "2000000",
+  "loanTerm": "24",
+  "region": "Москва",
+  "propertyValue": "3000000"
+}
