@@ -1,0 +1,24 @@
+{
+  "formData": {
+    "fullName": "Дёмин Иван Тимофеевич",
+    "birthDate": "1997-04-08",
+    "passport": "1010101001",
+    "phone": "+7(902)111-11-11",
+    "education": "Среднее общее",
+    "monthlyIncome": 1000000,
+    "bkiConsent": true,
+    "pdpConsent": true,
+    "desiredAmount": 3000000,
+    "loanTerm": 18,
+    "propertyRegion": "Уфа",
+    "propertyValue": 3500000,
+    "existingPayments": 0
+  },
+  "calculation": {
+    "monthlyPayment": 192850.45495864164,
+    "totalMonthlyObligations": 192850.45495864164,
+    "ratio": 0.19285045495864164,
+    "isRejected": false,
+    "probability": 80
+  }
+}
