@@ -2,8 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
-const fsAsync = require('fs').promises;
-const fs = require('fs');
+const fsPromises = require('fs').promises;
+const fsSync = require('fs');
 const path = require('path');
 
 const app = express();
@@ -11,8 +11,8 @@ const port = process.env.PORT;
 
 // --- Логирование ---
 const LOG_DIR = path.join(__dirname, 'logs');
-if (!fs.existsSync(LOG_DIR)) {
-    fs.mkdirSync(LOG_DIR, { recursive: true });
+if (!fsSync.existsSync(LOG_DIR)) {
+    fsSync.mkdirSync(LOG_DIR, { recursive: true });
 }
 
 const logFileName = `app_${new Date().toISOString().replace(/[:.]/g, '-')}.log`;
@@ -26,7 +26,7 @@ function writeLog(level, message, meta = {}) {
         message,
         ...meta
     }) + '\n';
-    fs.appendFileSync(logFilePath, logLine); 
+    fsSync.appendFileSync(logFilePath, logLine);
     console.log(`[${level}] ${message}`, meta);
 }
 
@@ -44,12 +44,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// Эндпоинт для клиентского логирования
-app.post('/api/log', (req, res) => {
-    const { level, message, details, sessionId } = req.body;
-    writeLog(level || 'CLIENT', message, { sessionId, ...details });
-    res.json({ ok: true });
-});
 
 // Настройка подключения к PostgreSQL
 const pool = new Pool({
@@ -62,6 +56,12 @@ const pool = new Pool({
 
 app.use(cors());
 app.use(express.json());
+// Эндпоинт для клиентского логирования
+app.post('/api/log', (req, res) => {
+    const { level, message, details, sessionId } = req.body;
+    writeLog(level || 'CLIENT', message, { sessionId, ...details });
+    res.json({ ok: true });
+});
 
 // Папка для сохранения JSON-файлов
 const DATA_DIR = path.resolve('D:/mipt/DBMS/Проект_Кредитный Калькулятор/input_data_examples');
@@ -69,11 +69,11 @@ const DATA_DIR = path.resolve('D:/mipt/DBMS/Проект_Кредитный Ка
 // Функция сохранения данных в файл
 async function saveToFile(payload) {
   try {
-    await fsAsync.mkdir(DATA_DIR, { recursive: true });
+    await fsPromises.mkdir(DATA_DIR, { recursive: true });
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `application_${timestamp}.json`;
     const filePath = path.join(DATA_DIR, filename);
-    await fsAsync.writeFile(filePath, JSON.stringify(payload, null, 2));
+    await fsPromises.writeFile(filePath, JSON.stringify(payload, null, 2));
     writeLog('INFO', `Данные сохранены в файл`, { filePath });
   } catch (err) {
     writeLog('ERROR', `Ошибка сохранения файла`, { error: err.message });

@@ -15,7 +15,7 @@ const sessionId = localStorage.getItem('sessionId') || (() => {
 function sendLog(level, message, details = {}) {
     const logData = { level, message, details, sessionId };
     // Отправляем асинхронно, игнорируем ошибки
-    fetch('/api/log', {
+    fetch('http://localhost:3000/api/log', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(logData)

@@ -1,7 +1,7 @@
 // --- Логирование  ---
 const sessionId = localStorage?.getItem('sessionId') || 'unknown';
 function sendLog(level, message, details = {}) {
-    fetch('/api/log', {
+    fetch('http://localhost:3000/api/log', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ level, message, details, sessionId })

@@ -1,0 +1,36 @@
+{"timestamp":"2026-04-06T18:10:50.640Z","level":"INFO","message":"Сервер запущен","port":"3000","logFile":"D:\\mipt\\DBMS\\Проект_Кредитный Калькулятор\\credit-backend\\logs\\app_2026-04-06T18-10-50-629Z.log"}
+{"timestamp":"2026-04-06T18:10:55.178Z","level":"INFO","message":"HTTP OPTIONS /api/log","status":204,"duration_ms":5,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:10:55.213Z","level":"INFO","message":"Переход на экран: form","sessionId":"1775491669220-bvighueoy"}
+{"timestamp":"2026-04-06T18:10:55.221Z","level":"INFO","message":"HTTP POST /api/log","status":200,"duration_ms":37,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:10:55.226Z","level":"INFO","message":"Приложение запущено","sessionId":"1775491669220-bvighueoy","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 YaBrowser/26.3.0.0 Safari/537.36"}
+{"timestamp":"2026-04-06T18:10:55.231Z","level":"INFO","message":"HTTP POST /api/log","status":200,"duration_ms":7,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:04.439Z","level":"INFO","message":"HTTP OPTIONS /api/log","status":204,"duration_ms":2,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:04.474Z","level":"INFO","message":"Начало обработки формы","sessionId":"1775491669220-bvighueoy"}
+{"timestamp":"2026-04-06T18:11:04.505Z","level":"INFO","message":"HTTP POST /api/log","status":200,"duration_ms":32,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:04.511Z","level":"INFO","message":"HTTP OPTIONS /api/log","status":204,"duration_ms":3,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:04.687Z","level":"INFO","message":"HTTP OPTIONS /api/log","status":204,"duration_ms":2,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:04.826Z","level":"INFO","message":"HTTP OPTIONS /api/log","status":204,"duration_ms":1,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:04.856Z","level":"INFO","message":"HTTP OPTIONS /api/log","status":204,"duration_ms":2,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:04.875Z","level":"INFO","message":"HTTP OPTIONS /api/applications","status":204,"duration_ms":2,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:04.879Z","level":"INFO","message":"Вызов calculator.processApplication","sessionId":"1775491669220-bvighueoy"}
+{"timestamp":"2026-04-06T18:11:04.882Z","level":"INFO","message":"HTTP POST /api/log","status":200,"duration_ms":4,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:04.887Z","level":"INFO","message":"processApplication начат","sessionId":"1775491669220-bvighueoy","desiredAmount":3000000}
+{"timestamp":"2026-04-06T18:11:04.903Z","level":"INFO","message":"HTTP POST /api/log","status":200,"duration_ms":17,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:04.912Z","level":"INFO","message":"Расчёт ПДН","sessionId":"1775491669220-bvighueoy","monthlyPayment":192850.45495864164,"totalMonthlyObligations":192850.45495864164,"ratio":0.19285045495864164,"isRejected":false}
+{"timestamp":"2026-04-06T18:11:04.918Z","level":"INFO","message":"HTTP POST /api/log","status":200,"duration_ms":8,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:04.921Z","level":"INFO","message":"Отправка данных на сервер","sessionId":"1775491669220-bvighueoy","url":"http://localhost:3000/api/applications"}
+{"timestamp":"2026-04-06T18:11:04.923Z","level":"INFO","message":"HTTP POST /api/log","status":200,"duration_ms":3,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:04.928Z","level":"INFO","message":"Получена заявка","sessionId":"unknown","passport":"1010101001"}
+{"timestamp":"2026-04-06T18:11:05.295Z","level":"INFO","message":"Начало транзакции БД","sessionId":"unknown"}
+{"timestamp":"2026-04-06T18:11:05.336Z","level":"INFO","message":"Заявка успешно сохранена","sessionId":"unknown","applId":"19"}
+{"timestamp":"2026-04-06T18:11:05.348Z","level":"INFO","message":"Данные сохранены в файл","filePath":"D:\\mipt\\DBMS\\Проект_Кредитный Калькулятор\\input_data_examples\\application_2026-04-06T18-11-05-342Z.json"}
+{"timestamp":"2026-04-06T18:11:05.352Z","level":"INFO","message":"Соединение с БД закрыто","sessionId":"unknown"}
+{"timestamp":"2026-04-06T18:11:05.356Z","level":"INFO","message":"HTTP POST /api/applications","status":200,"duration_ms":431,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:05.364Z","level":"INFO","message":"Данные успешно сохранены в БД и файл","sessionId":"1775491669220-bvighueoy"}
+{"timestamp":"2026-04-06T18:11:05.367Z","level":"INFO","message":"HTTP POST /api/log","status":200,"duration_ms":4,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:05.371Z","level":"INFO","message":"Расчёт завершён","sessionId":"1775491669220-bvighueoy","status":"success","probability":80}
+{"timestamp":"2026-04-06T18:11:05.374Z","level":"INFO","message":"HTTP POST /api/log","status":200,"duration_ms":5,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:05.391Z","level":"INFO","message":"Переход на экран: result","sessionId":"1775491669220-bvighueoy"}
+{"timestamp":"2026-04-06T18:11:05.440Z","level":"INFO","message":"HTTP POST /api/log","status":200,"duration_ms":50,"ip":"::ffff:127.0.0.1"}
+{"timestamp":"2026-04-06T18:11:05.453Z","level":"INFO","message":"Экран результата отображён","sessionId":"1775491669220-bvighueoy"}
+{"timestamp":"2026-04-06T18:11:05.457Z","level":"INFO","message":"HTTP POST /api/log","status":200,"duration_ms":5,"ip":"::ffff:127.0.0.1"}
