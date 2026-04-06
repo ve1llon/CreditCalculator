@@ -1,0 +1,24 @@
+{
+  "formData": {
+    "fullName": "Пушкин Александр Сергеевич",
+    "birthDate": "2004-04-01",
+    "passport": "9999999999",
+    "phone": "+7(902)999-99-99",
+    "education": "Высшее",
+    "monthlyIncome": 300000,
+    "bkiConsent": true,
+    "pdpConsent": true,
+    "desiredAmount": 20000000,
+    "loanTerm": 120,
+    "propertyRegion": "Москва",
+    "propertyValue": 23000000,
+    "existingPayments": 0
+  },
+  "calculation": {
+    "monthlyPayment": 373344.71072248014,
+    "totalMonthlyObligations": 373344.71072248014,
+    "ratio": 1.2444823690749338,
+    "isRejected": true,
+    "probability": 30
+  }
+}

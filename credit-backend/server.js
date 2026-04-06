@@ -2,11 +2,54 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
-const fs = require('fs').promises;
+const fsAsync = require('fs').promises;
+const fs = require('fs');
 const path = require('path');
 
 const app = express();
 const port = process.env.PORT;
+
+// --- Логирование ---
+const LOG_DIR = path.join(__dirname, 'logs');
+if (!fs.existsSync(LOG_DIR)) {
+    fs.mkdirSync(LOG_DIR, { recursive: true });
+}
+
+const logFileName = `app_${new Date().toISOString().replace(/[:.]/g, '-')}.log`;
+const logFilePath = path.join(LOG_DIR, logFileName);
+
+function writeLog(level, message, meta = {}) {
+    const timestamp = new Date().toISOString();
+    const logLine = JSON.stringify({
+        timestamp,
+        level,
+        message,
+        ...meta
+    }) + '\n';
+    fs.appendFileSync(logFilePath, logLine); 
+    console.log(`[${level}] ${message}`, meta);
+}
+
+// Middleware для логирования всех запросов
+app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        writeLog('INFO', `HTTP ${req.method} ${req.url}`, {
+            status: res.statusCode,
+            duration_ms: duration,
+            ip: req.ip
+        });
+    });
+    next();
+});
+
+// Эндпоинт для клиентского логирования
+app.post('/api/log', (req, res) => {
+    const { level, message, details, sessionId } = req.body;
+    writeLog(level || 'CLIENT', message, { sessionId, ...details });
+    res.json({ ok: true });
+});
 
 // Настройка подключения к PostgreSQL
 const pool = new Pool({
@@ -26,13 +69,14 @@ const DATA_DIR = path.resolve('D:/mipt/DBMS/Проект_Кредитный Ка
 // Функция сохранения данных в файл
 async function saveToFile(payload) {
   try {
-    await fs.mkdir(DATA_DIR, { recursive: true });
+    await fsAsync.mkdir(DATA_DIR, { recursive: true });
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `application_${timestamp}.json`;
     const filePath = path.join(DATA_DIR, filename);
-    await fs.writeFile(filePath, JSON.stringify(payload, null, 2));
-    console.log(`Данные сохранены в файл: ${filePath}`);
+    await fsAsync.writeFile(filePath, JSON.stringify(payload, null, 2));
+    writeLog('INFO', `Данные сохранены в файл`, { filePath });
   } catch (err) {
+    writeLog('ERROR', `Ошибка сохранения файла`, { error: err.message });
     console.error('Ошибка при сохранении файла:', err);
   }
 }
@@ -40,8 +84,11 @@ async function saveToFile(payload) {
 // Эндпоинт для приёма заявок
 app.post('/api/applications', async (req, res) => {
   const { formData, calculation } = req.body;
+  const sessionId = req.headers['x-session-id'] || 'unknown';
+  writeLog('INFO', `Получена заявка`, { sessionId, passport: formData?.passport });
 
   if (!formData || !calculation) {
+    writeLog('WARN', `Неполные данные в заявке`, { sessionId });
     return res.status(400).json({ error: 'Неполные данные' });
   }
 
@@ -66,6 +113,7 @@ app.post('/api/applications', async (req, res) => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
+    writeLog('INFO', `Начало транзакции БД`, { sessionId });
 
     // 1. Ищем или создаём клиента по паспорту
     let clientId;
@@ -116,6 +164,7 @@ app.post('/api/applications', async (req, res) => {
     );
 
     await client.query('COMMIT');
+    writeLog('INFO', `Заявка успешно сохранена`, { sessionId, applId });
 
     // --- Автосохранение в файл ---
     await saveToFile({ formData, calculation });
@@ -123,13 +172,16 @@ app.post('/api/applications', async (req, res) => {
     res.json({ success: true, applId });
   } catch (err) {
     await client.query('ROLLBACK');
+    writeLog('ERROR', `Ошибка при сохранении в БД`, { sessionId, error: err.message, stack: err.stack });
     console.error('Ошибка при сохранении в БД:', err);
     res.status(500).json({ error: 'Внутренняя ошибка сервера' });
   } finally {
     client.release();
+    writeLog('INFO', `Соединение с БД закрыто`, { sessionId });
   }
 });
 
 app.listen(port, () => {
+  writeLog('INFO', `Сервер запущен`, { port, logFile: logFilePath });
   console.log(`Сервер запущен на http://localhost:${port}`);
 });

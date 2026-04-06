@@ -1,3 +1,15 @@
+// --- Логирование  ---
+const sessionId = localStorage?.getItem('sessionId') || 'unknown';
+function sendLog(level, message, details = {}) {
+    fetch('/api/log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ level, message, details, sessionId })
+    }).catch(() => {});
+    console.log(`[${level}] ${message}`, details);
+}
+
+
 // класс расчёта и отправка на сервер
 export class CreditCalculator {
     constructor() {
@@ -24,6 +36,7 @@ export class CreditCalculator {
     }
 
     async processApplication(formData) {
+        sendLog('INFO', 'processApplication начат', { desiredAmount: formData.desiredAmount });
         const { 
             monthlyIncome, 
             desiredAmount, 
@@ -41,6 +54,7 @@ export class CreditCalculator {
 
         // 1. Обязательное согласие на БКИ
         if (!bkiConsent) {
+            sendLog('WARN', 'Отказ: нет согласия БКИ');
             return {
                 data: {
                     probability: 0,
@@ -55,6 +69,7 @@ export class CreditCalculator {
         // 2. Возрастные ограничения
         const age = this._calculateAge(birthDate);
         if (age < 21) {
+            sendLog('WARN', 'Отказ: возраст < 21', { age });
             return {
                 data: {
                     probability: 10,
@@ -66,6 +81,7 @@ export class CreditCalculator {
             };
         }
         if (age > 65) {
+            sendLog('WARN', 'Отказ: возраст > 65', { age });
             return {
                 data: {
                     probability: 15,
@@ -79,6 +95,7 @@ export class CreditCalculator {
 
         // 3. Сумма кредита не должна превышать стоимость недвижимости
         if (desiredAmount > propertyValue) {
+            sendLog('WARN', 'Отказ: сумма > стоимости', { desiredAmount, propertyValue });
             return {
                 data: {
                     probability: 5,
@@ -96,6 +113,7 @@ export class CreditCalculator {
         const paymentToIncomeRatio = totalMonthlyObligations / monthlyIncome;
         const isRejected = paymentToIncomeRatio >= 0.5;
         const probability = isRejected ? 30 : 80;
+        sendLog('INFO', 'Расчёт ПДН', { monthlyPayment, totalMonthlyObligations, ratio: paymentToIncomeRatio, isRejected });
 
         const result = {
             data: {
@@ -127,6 +145,7 @@ export class CreditCalculator {
     }
 
     async _sendToBackend(formData, technical, resultData) {
+        sendLog('INFO', 'Отправка данных на сервер', { url: 'http://localhost:3000/api/applications' });
         try {
             const payload = {
                 formData: {
@@ -160,12 +179,13 @@ export class CreditCalculator {
             });
 
             if (!response.ok) {
-                console.error('Ошибка при сохранении данных на сервере:', await response.text());
+                const text = await response.text();
+                sendLog('ERROR', 'Ошибка при сохранении на сервере', { status: response.status, body: text });
             } else {
-                console.log('Данные успешно сохранены в БД и файл');
+                sendLog('INFO', 'Данные успешно сохранены в БД и файл');
             }
         } catch (err) {
-            console.error('Не удалось отправить данные на бэкенд:', err.message);
+            sendLog('ERROR', 'Не удалось отправить данные на бэкенд', { error: err.message });
         }
     }
 }

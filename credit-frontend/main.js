@@ -5,6 +5,25 @@ import { generateOffers } from './offersGenerator.js';
 import { loadFormFromFile } from './fileLoader.js';
 import { buildFormScreen, buildResultScreen } from './uiBuilder.js';
 
+// --- Логирование ---
+const sessionId = localStorage.getItem('sessionId') || (() => {
+    const id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem('sessionId', id);
+    return id;
+})();
+
+function sendLog(level, message, details = {}) {
+    const logData = { level, message, details, sessionId };
+    // Отправляем асинхронно, игнорируем ошибки
+    fetch('/api/log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(logData)
+    }).catch(err => console.warn('Log send failed:', err));
+    // Дублируем в консоль для разработки
+    console.log(`[${level}] ${message}`, details);
+}
+
 const app = document.getElementById('app');
 injectStyles();
 
@@ -15,6 +34,7 @@ let __lastResult = null;
 let __lastOffers = null;
 
 function renderScreen(screen) {
+    sendLog('INFO', `Переход на экран: ${screen}`);
     app.innerHTML = '';
 
     if (screen === 'form') {
@@ -38,6 +58,7 @@ function renderScreen(screen) {
 }
 
 async function onSubmit() {
+    sendLog('INFO', 'Начало обработки формы');
     const lastName = document.getElementById('lastName').value.trim();
     const firstName = document.getElementById('firstName').value.trim();
     const middleName = document.getElementById('middleName').value.trim();
@@ -87,7 +108,10 @@ async function onSubmit() {
     submitBtn.disabled = true;
 
     try {
+        sendLog('INFO', 'Вызов calculator.processApplication');
         const result = await calculator.processApplication(formData);
+        sendLog('INFO', 'Расчёт завершён', { status: result.data.status, probability: result.data.probability });
+
 
         const resultForDisplay = {
             probability: result.data.probability,
@@ -124,8 +148,9 @@ async function onSubmit() {
         __lastOffers = offers;
 
         renderScreen('result');
+        sendLog('INFO', 'Экран результата отображён');
     } catch (error) {
-        console.error('Ошибка при обработке заявки:', error);
+        sendLog('ERROR', 'Ошибка при обработке заявки', { error: error.message, stack: error.stack });
         alert('Произошла ошибка при расчёте. Попробуйте позже.');
     } finally {
         submitBtn.textContent = originalText;
@@ -135,3 +160,4 @@ async function onSubmit() {
 
 // Запуск
 renderScreen('form');
+sendLog('INFO', 'Приложение запущено', { userAgent: navigator.userAgent });
